@@ -68,7 +68,7 @@ do
 	clear
 	echo CURRENT LOGIN SESSIONS:
 	echo -e "\n"
-	who --all
+	w
 	sleep 5
 	clear
 	echo LAST LOGIN SESSIONS:
