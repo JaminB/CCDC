@@ -101,7 +101,7 @@ do
 	ls -a /bin >> temp3
 	ls -a /etc/ssh >> temp3
 	fileChanges=$(diff temp2 temp3)
-	if [ $fileChanges != "" ];then
+	if [[ ! -z "$fileChanges" ]];then
   	  echo CHANGE TRACKER:
 	  echo -e "\n"
 	  echo "$fileChanges"
