@@ -66,23 +66,26 @@ do
 	cat temp
 	sleep 5
 	clear
+
 	echo CURRENT LOGIN SESSIONS:
 	echo -e "\n"
 	w
 	sleep 5
 	clear
+
 	echo LAST LOGIN SESSIONS:
 	echo -e "\n"
 	last | head -n5
 	sleep 5
 	clear
+
 	echo SLEEP PROCESSES:
 	echo -e "\n"
 	pstree | grep sleep
 	sleep 5
 	clear
-	echo CHANGE TRACKER:
-	echo -e "\n"
+
+	#Check for changes to important files.
 	md5sum /etc/passwd > temp3
 	md5sum /etc/group >> temp3
 	md5sum /etc/profile >> temp3
@@ -97,14 +100,21 @@ do
 	ls -a /home/ >> temp3
 	ls -a /bin >> temp3
 	ls -a /etc/ssh >> temp3
-	diff temp2 temp3
-	sleep 5
-	clear
+	fileChanges=$(diff temp2 temp3)
+	if [ $fileChanges != "" ];then
+  	  echo CHANGE TRACKER:
+	  echo -e "\n"
+	  echo "$fileChanges"
+	  sleep 5
+	  clear
+	fi
+
 	echo CRON JOBS:
 	echo Found Cronjobs for the following users:
 	ls /var/spool/cron/crontabs
 	sleep 5
 	clear
+
 	echo ALIASES:
 	alias
 	echo -e "\n"
