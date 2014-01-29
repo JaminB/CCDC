@@ -126,11 +126,12 @@ do
 	done
 	sleep 5
 	clear
-	echo USERS WITH BASH/SH SHELL:
-	cat /etc/passwd | grep /bin/bash | cut -d ':' -f1
-	cat /etc/passwd | grep /bin/sh | cut -d ':' -f1
+
+	echo USERS ABLE TO LOGIN:
+	grep -v -e "/bin/false" -e "/sbin/nologin" /etc/passwd | cut -d ':' -f1
 	sleep 5
 	clear
+
 	echo TOP PROCESSES:
 	echo -e "\n"
 	ps -A
