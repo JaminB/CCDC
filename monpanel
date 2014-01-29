@@ -1,0 +1,125 @@
+#!/bin/bash
+echo THIS SCRIPT MUST BE RUN AS ROOT! ALWAYS SUDO FIRST!
+find / -name .bashrc > temp4 &
+md5sum /etc/passwd > temp2
+md5sum /etc/group >> temp2
+md5sum /etc/profile >> temp2
+md5sum /etc/sudoers >> temp2
+md5sum /etc/hosts >> temp2
+md5sum /etc/ssh/ssh_config >> temp2
+md5sum /etc/ssh/sshd_config >> temp2
+ls -a / >> temp2
+ls -a /etc/ >> temp2
+ls -a /usr/ >> temp2
+ls -a /sys/ >> temp2
+ls -a /home/ >> temp2
+ls -a /bin >> temp2
+ls -a /etc/ssh >> temp2
+while true;
+do	
+	netstat -n -A inet | grep ESTABLISHED > temp
+	outgoing_ftp=`cat temp | cut -d ':' -f2 | grep "^21" | wc -l`
+	incoming_ftp=`cat temp | cut -d ':' -f3 | grep "^21" | wc -l`
+	
+	outgoing_ssh=`cat temp | cut -d ':' -f2 | grep "^22" | wc -l`
+	incoming_ssh=`cat temp | cut -d ':' -f3 | grep "^22" | wc -l`
+
+	
+	outgoing_telnet=`cat temp | cut -d ':' -f2 | grep "^^23" | wc -l`
+	incoming_telnet=`cat temp | cut -d ':' -f3 | grep "^^23" | wc -l`
+	
+	echo ACTIVE NETWORK CONNECTIONS:
+	echo -e "\n"
+	if [ $outgoing_telnet -gt 0 ]; then
+		echo $outgoing_telnet successful outgoing telnet connection.
+	fi
+	
+	if [ $incoming_telnet -gt 0 ]; then
+		echo $incoming_telnet successful incoming telnet session.
+	fi
+
+	if [ $outgoing_ssh -gt 0 ]; then
+		echo $outgoing_ssh successful outgoing ssh connection.
+	fi
+	
+	if [ $incoming_ssh -gt 0 ]; then
+		echo $incoming_ssh successful incoming ssh session.
+	fi
+	
+	
+	if [ $outgoing_ftp -gt 0 ]; then
+		echo $outgoing_ftp successful outgoing ftp connection.
+	fi
+	
+	if [ $incoming_ftp -gt 0 ]; then
+		echo $incoming_ftp successful incoming ftp session.
+	fi
+
+	if [ $incoming_ftp -gt 0 ]; then
+		echo $incoming_ftp successful incoming ftp session.
+	fi
+	cat temp
+	sleep 5
+	clear
+	echo CURRENT LOGIN SESSIONS:
+	echo -e "\n"
+	who --all
+	sleep 5
+	clear
+	echo LAST LOGIN SESSIONS:
+	echo -e "\n"
+	last
+	sleep 5
+	clear
+	echo SLEEP PROCESSES:
+	echo -e "\n"
+	pstree | grep sleep
+	sleep 5
+	clear
+	echo CHANGE TRACKER:
+	echo -e "\n"
+	md5sum /etc/passwd > temp3
+	md5sum /etc/group >> temp3
+	md5sum /etc/profile >> temp3
+	md5sum /etc/sudoers >> temp3
+	md5sum /etc/hosts >> temp3	
+	md5sum /etc/ssh/ssh_config >> temp3
+	md5sum /etc/ssh/sshd_config >> temp3
+	ls -a / >> temp3
+	ls -a /etc/ >> temp3
+	ls -a /usr/ >> temp3
+	ls -a /sys/ >> temp3
+	ls -a /home/ >> temp3
+	ls -a /bin >> temp3
+	ls -a /etc/ssh >> temp3
+	diff temp2 temp3
+	sleep 5
+	clear
+	echo CRON JOBS:
+	echo Found Cronjobs for the following users:
+	ls /var/spool/cron/crontabs
+	sleep 5
+	clear
+	echo ALIASES:
+	alias
+	echo -e "\n"
+	echo .BASHRC LOCATIONS:
+	echo -e "\n"
+	cat temp4 | while read line
+	do
+		echo $line
+	done
+	sleep 5
+	clear
+	echo USERS WITH BASH/SH SHELL:
+	cat /etc/passwd | grep /bin/bash | cut -d ':' -f1
+	cat /etc/passwd | grep /bin/sh | cut -d ':' -f1
+	sleep 5
+	clear
+	echo TOP PROCESSES:
+	echo -e "\n"
+	ps -A
+	sleep 7
+	clear
+done
+
