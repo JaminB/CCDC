@@ -23,15 +23,15 @@ ls -a /etc/ssh >> temp2
 while true;
 do	
 	netstat -n -A inet | grep ESTABLISHED > temp
-	outgoing_ftp=`cat temp | cut -d ':' -f2 | grep "^21" | wc -l`
-	incoming_ftp=`cat temp | cut -d ':' -f3 | grep "^21" | wc -l`
+	outgoing_ftp=$(cat temp | cut -d ':' -f2 | grep "^21" | wc -l)
+	incoming_ftp=$(cat temp | cut -d ':' -f3 | grep "^21" | wc -l)
 	
-	outgoing_ssh=`cat temp | cut -d ':' -f2 | grep "^22" | wc -l`
-	incoming_ssh=`cat temp | cut -d ':' -f3 | grep "^22" | wc -l`
+	outgoing_ssh=$(cat temp | cut -d ':' -f2 | grep "^22" | wc -l)
+	incoming_ssh=$(cat temp | cut -d ':' -f3 | grep "^22" | wc -l)
 
 	
-	outgoing_telnet=`cat temp | cut -d ':' -f2 | grep "^^23" | wc -l`
-	incoming_telnet=`cat temp | cut -d ':' -f3 | grep "^^23" | wc -l`
+	outgoing_telnet=$(cat temp | cut -d ':' -f2 | grep "^^23" | wc -l)
+	incoming_telnet=$(cat temp | cut -d ':' -f3 | grep "^^23" | wc -l)
 	
 	echo ACTIVE NETWORK CONNECTIONS:
 	echo -e "\n"
