@@ -1,5 +1,10 @@
 #!/bin/bash
-echo THIS SCRIPT MUST BE RUN AS ROOT! ALWAYS SUDO FIRST!
+
+if [ $(whoami) != "root" ];then
+  echo THIS SCRIPT MUST BE RUN AS ROOT!
+  exit
+fi
+
 find / -name .bashrc > temp4 &
 md5sum /etc/passwd > temp2
 md5sum /etc/group >> temp2
