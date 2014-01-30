@@ -135,9 +135,9 @@ do
 	sleep 5
 	clear
 
-	echo TOP PROCESSES:
-	echo -e "\n"
-	ps -A
+	echo "CURRENT PROCESS TREE:"
+	echo
+	pstree
 	sleep 7
 	clear
 done
