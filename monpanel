@@ -68,22 +68,22 @@ do
 	clear
 
 	echo CURRENT LOGIN SESSIONS:
-	echo -e "\n"
+	echo "-------------------------"
 	w
-	sleep 5
-	clear
-
-	echo LAST LOGIN SESSIONS:
-	echo -e "\n"
+	echo
+	echo RECENT LOGIN SESSIONS:
+	echo "-------------------------"
 	last | head -n5
 	sleep 5
 	clear
 
-	echo SLEEP PROCESSES:
-	echo -e "\n"
-	pstree | grep sleep
-	sleep 5
-	clear
+	sleepingProcs=$(pstree | grep sleep)
+	if [[ ! -z "$sleepingProcs" ]];then
+	  echo SLEEP PROCESSES:
+	  echo -e "\n"
+	  sleep 5
+	  clear
+	fi
 
 	#Check for changes to important files.
 	md5sum /etc/passwd > temp3
@@ -109,9 +109,12 @@ do
 	  clear
 	fi
 
-	echo CRON JOBS:
-	echo Found Cronjobs for the following users:
+	echo "CRON JOBS:"
+	echo "Found Cronjobs for the following users:"
 	ls /var/spool/cron/crontabs
+	echo
+	echo "Cronjobs in cron.d:"
+	ls /etc/cron.d/
 	sleep 5
 	clear
 
