@@ -6,20 +6,8 @@ if [ $(whoami) != "root" ];then
 fi
 
 find / -name .bashrc > temp4 &
-md5sum /etc/passwd > temp2
-md5sum /etc/group >> temp2
-md5sum /etc/profile >> temp2
-md5sum /etc/sudoers >> temp2
-md5sum /etc/hosts >> temp2
-md5sum /etc/ssh/ssh_config >> temp2
-md5sum /etc/ssh/sshd_config >> temp2
-ls -a / >> temp2
-ls -a /etc/ >> temp2
-ls -a /usr/ >> temp2
-ls -a /sys/ >> temp2
-ls -a /home/ >> temp2
-ls -a /bin >> temp2
-ls -a /etc/ssh >> temp2
+md5sum /etc/passwd /etc/group /etc/profile md5sum /etc/sudoers /etc/hosts /etc/ssh/ssh_config /etc/ssh/sshd_config > temp2
+ls -a /etc/ /usr/ /sys/ /home/ /bin/ /etc/ssh/ >> temp2
 while true;
 do	
 	netstat -n -A inet | grep ESTABLISHED > temp
@@ -86,20 +74,9 @@ do
 	fi
 
 	#Check for changes to important files.
-	md5sum /etc/passwd > temp3
-	md5sum /etc/group >> temp3
-	md5sum /etc/profile >> temp3
-	md5sum /etc/sudoers >> temp3
-	md5sum /etc/hosts >> temp3	
-	md5sum /etc/ssh/ssh_config >> temp3
-	md5sum /etc/ssh/sshd_config >> temp3
-	ls -a / >> temp3
-	ls -a /etc/ >> temp3
-	ls -a /usr/ >> temp3
-	ls -a /sys/ >> temp3
-	ls -a /home/ >> temp3
-	ls -a /bin >> temp3
-	ls -a /etc/ssh >> temp3
+	
+	md5sum /etc/passwd /etc/group /etc/profile md5sum /etc/sudoers /etc/hosts /etc/ssh/ssh_config /etc/ssh/sshd_config > temp3
+	ls -a /etc/ /usr/ /sys/ /home/ /bin/ /etc/ssh/ >> temp3
 	fileChanges=$(diff temp2 temp3)
 	if [[ ! -z "$fileChanges" ]];then
   	  echo CHANGE TRACKER:
