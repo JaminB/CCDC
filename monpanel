@@ -1,5 +1,10 @@
 #!/bin/bash
-echo THIS SCRIPT MUST BE RUN AS ROOT! ALWAYS SUDO FIRST!
+
+if [ $(whoami) != "root" ];then
+  echo "THIS SCRIPT MUST BE RUN AS ROOT!"
+  exit
+fi
+
 find / -name .bashrc > temp4 &
 md5sum /etc/passwd > temp2
 md5sum /etc/group >> temp2
@@ -18,18 +23,18 @@ ls -a /etc/ssh >> temp2
 while true;
 do	
 	netstat -n -A inet | grep ESTABLISHED > temp
-	outgoing_ftp=`cat temp | cut -d ':' -f2 | grep "^21" | wc -l`
-	incoming_ftp=`cat temp | cut -d ':' -f3 | grep "^21" | wc -l`
+	outgoing_ftp=$(cat temp | cut -d ':' -f2 | grep "^21" | wc -l)
+	incoming_ftp=$(cat temp | cut -d ':' -f3 | grep "^21" | wc -l)
 	
-	outgoing_ssh=`cat temp | cut -d ':' -f2 | grep "^22" | wc -l`
-	incoming_ssh=`cat temp | cut -d ':' -f3 | grep "^22" | wc -l`
+	outgoing_ssh=$(cat temp | cut -d ':' -f2 | grep "^22" | wc -l)
+	incoming_ssh=$(cat temp | cut -d ':' -f3 | grep "^22" | wc -l)
 
 	
-	outgoing_telnet=`cat temp | cut -d ':' -f2 | grep "^^23" | wc -l`
-	incoming_telnet=`cat temp | cut -d ':' -f3 | grep "^^23" | wc -l`
+	outgoing_telnet=$(cat temp | cut -d ':' -f2 | grep "^^23" | wc -l)
+	incoming_telnet=$(cat temp | cut -d ':' -f3 | grep "^^23" | wc -l)
 	
-	echo ACTIVE NETWORK CONNECTIONS:
-	echo -e "\n"
+	echo "ACTIVE NETWORK CONNECTIONS:"
+	echo "---------------------------"
 	if [ $outgoing_telnet -gt 0 ]; then
 		echo $outgoing_telnet successful outgoing telnet connection.
 	fi
@@ -61,23 +66,26 @@ do
 	cat temp
 	sleep 5
 	clear
-	echo CURRENT LOGIN SESSIONS:
-	echo -e "\n"
-	who --all
+
+	echo "CURRENT LOGIN SESSIONS:"
+	echo "-----------------------"
+	w
+	echo
+	echo "RECENT LOGIN SESSIONS:"
+	echo "----------------------"
+	last | head -n5
 	sleep 5
 	clear
-	echo LAST LOGIN SESSIONS:
-	echo -e "\n"
-	last
-	sleep 5
-	clear
-	echo SLEEP PROCESSES:
-	echo -e "\n"
-	pstree | grep sleep
-	sleep 5
-	clear
-	echo CHANGE TRACKER:
-	echo -e "\n"
+
+	sleepingProcs=$(pstree | grep sleep)
+	if [[ ! -z "$sleepingProcs" ]];then
+	  echo "SLEEP PROCESSES:"
+	  echo "----------------"
+	  sleep 5
+	  clear
+	fi
+
+	#Check for changes to important files.
 	md5sum /etc/passwd > temp3
 	md5sum /etc/group >> temp3
 	md5sum /etc/profile >> temp3
@@ -92,33 +100,48 @@ do
 	ls -a /home/ >> temp3
 	ls -a /bin >> temp3
 	ls -a /etc/ssh >> temp3
-	diff temp2 temp3
-	sleep 5
-	clear
-	echo CRON JOBS:
-	echo Found Cronjobs for the following users:
+	fileChanges=$(diff temp2 temp3)
+	if [[ ! -z "$fileChanges" ]];then
+  	  echo CHANGE TRACKER:
+	  echo -e "\n"
+	  echo "$fileChanges"
+	  sleep 5
+	  clear
+	fi
+
+	echo "CRON JOBS:"
+	echo "Found Cronjobs for the following users:"
+	echo "---------------------------------------"
 	ls /var/spool/cron/crontabs
+	echo
+	echo "Cronjobs in cron.d:"
+	echo "-------------------"
+	ls /etc/cron.d/
 	sleep 5
 	clear
-	echo ALIASES:
+
+	echo "ALIASES:"
+	echo "--------"
 	alias
-	echo -e "\n"
-	echo .BASHRC LOCATIONS:
-	echo -e "\n"
+	echo
+	echo ".BASHRC LOCATIONS:"
+	echo "------------------"
 	cat temp4 | while read line
 	do
 		echo $line
 	done
 	sleep 5
 	clear
-	echo USERS WITH BASH/SH SHELL:
-	cat /etc/passwd | grep /bin/bash | cut -d ':' -f1
-	cat /etc/passwd | grep /bin/sh | cut -d ':' -f1
+
+	echo "USERS ABLE TO LOGIN:"
+	echo "--------------------"
+	grep -v -e "/bin/false" -e "/sbin/nologin" /etc/passwd | cut -d ':' -f1
 	sleep 5
 	clear
-	echo TOP PROCESSES:
-	echo -e "\n"
-	ps -A
+
+	echo "CURRENT PROCESS TREE:"
+	echo "---------------------"
+	pstree
 	sleep 7
 	clear
 done
