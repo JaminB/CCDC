@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $(whoami) != "root" ];then
-  echo THIS SCRIPT MUST BE RUN AS ROOT!
+  echo "THIS SCRIPT MUST BE RUN AS ROOT!"
   exit
 fi
 
@@ -33,8 +33,8 @@ do
 	outgoing_telnet=$(cat temp | cut -d ':' -f2 | grep "^^23" | wc -l)
 	incoming_telnet=$(cat temp | cut -d ':' -f3 | grep "^^23" | wc -l)
 	
-	echo ACTIVE NETWORK CONNECTIONS:
-	echo -e "\n"
+	echo "ACTIVE NETWORK CONNECTIONS:"
+	echo "---------------------------"
 	if [ $outgoing_telnet -gt 0 ]; then
 		echo $outgoing_telnet successful outgoing telnet connection.
 	fi
@@ -67,20 +67,20 @@ do
 	sleep 5
 	clear
 
-	echo CURRENT LOGIN SESSIONS:
-	echo "-------------------------"
+	echo "CURRENT LOGIN SESSIONS:"
+	echo "-----------------------"
 	w
 	echo
-	echo RECENT LOGIN SESSIONS:
-	echo "-------------------------"
+	echo "RECENT LOGIN SESSIONS:"
+	echo "----------------------"
 	last | head -n5
 	sleep 5
 	clear
 
 	sleepingProcs=$(pstree | grep sleep)
 	if [[ ! -z "$sleepingProcs" ]];then
-	  echo SLEEP PROCESSES:
-	  echo -e "\n"
+	  echo "SLEEP PROCESSES:"
+	  echo "----------------"
 	  sleep 5
 	  clear
 	fi
@@ -111,18 +111,21 @@ do
 
 	echo "CRON JOBS:"
 	echo "Found Cronjobs for the following users:"
+	echo "---------------------------------------"
 	ls /var/spool/cron/crontabs
 	echo
 	echo "Cronjobs in cron.d:"
+	echo "-------------------"
 	ls /etc/cron.d/
 	sleep 5
 	clear
 
-	echo ALIASES:
+	echo "ALIASES:"
+	echo "--------"
 	alias
-	echo -e "\n"
-	echo .BASHRC LOCATIONS:
-	echo -e "\n"
+	echo
+	echo ".BASHRC LOCATIONS:"
+	echo "------------------"
 	cat temp4 | while read line
 	do
 		echo $line
@@ -130,13 +133,14 @@ do
 	sleep 5
 	clear
 
-	echo USERS ABLE TO LOGIN:
+	echo "USERS ABLE TO LOGIN:"
+	echo "--------------------"
 	grep -v -e "/bin/false" -e "/sbin/nologin" /etc/passwd | cut -d ':' -f1
 	sleep 5
 	clear
 
 	echo "CURRENT PROCESS TREE:"
-	echo
+	echo "---------------------"
 	pstree
 	sleep 7
 	clear
