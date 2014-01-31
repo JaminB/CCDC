@@ -1,0 +1,19 @@
+#! /bin/bash
+
+while true
+do
+echo "Logged-in users:"
+echo "----------------"
+w
+echo
+echo "Active Network Connections:"
+echo "---------------------------"
+netstat -A inet
+echo
+echo "Recent web server error log:"
+echo "----------------------"
+tail /var/log/apache2/error.log
+sleep 3
+clear
+done
+
