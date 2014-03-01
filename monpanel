@@ -18,13 +18,13 @@ do
 	outgoing_ssh=$(cat temp | cut -d ':' -f3 | grep "^22" | wc -l)
 
 	
-<<<<<<< HEAD
+
 	outgoing_telnet=$(cat temp | cut -d ':' -f2 | grep "^23" | wc -l)
 	incoming_telnet=$(cat temp | cut -d ':' -f3 | grep "^23" | wc -l)
-=======
+
 	incoming_telnet=$(cat temp | cut -d ':' -f2 | grep "^^23" | wc -l)
 	outgoing_telnet=$(cat temp | cut -d ':' -f3 | grep "^^23" | wc -l)
->>>>>>> 173befd190fdc66f03ac7c28e618cce69b9e19ab
+
 	
 	echo "ACTIVE NETWORK CONNECTIONS:"
 	echo "---------------------------"
