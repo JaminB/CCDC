@@ -22,3 +22,5 @@ for user in `cat /etc/passwd | cut -d ":" -f 1`; do
         fi
 done
 
+iptables -F
+# RedteamFilter
